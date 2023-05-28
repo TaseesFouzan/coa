@@ -32,6 +32,35 @@
         BX R14  <br>
         AREA IO,DATA <br>
   VALUE SPACE 4 <br>
-        END </p>
+        END </p>  <br> <br>
+    
+    <p>
+    AREA RESET, CODE <br>
+    ENTRY <br>
+    MOV R3, #0 <br>
+    MOV R4, #0 <br>
+    LDR R0, =INPUTS <br> 
+    LDR R1, =OUTPUTS  <br>
+CONT <br>
+    LDR R2, [R0] <br>
+    ADD R4, R4, R2 <br>
+    ADD R0, R0, #4 <br>
+    ADD R3, R3, #1 <br>
+    CMP R3, #5 <br>
+    BNE CONT <br>
+    MOV R2, #5 <br>
+    MOV R3, #0 <br>
+REPT SUBS R4, R4, R2 <br>
+    ADDPL R3, R3, #1 <br>
+    BPL REPT <br>
+    ADDMI R4, R4, R2 <br>
+    STR R3, [R1] <br>
+    STR R4, [R1, #4] <br>
+STOP B STOP <br>
+INPUTS DCD 01,02,03,04,06 <br>
+    AREA MEMORY, DATA <br>
+OUTPUTS SPACE 4 <br>
+    END
+</p>
 </body>
 </html>
