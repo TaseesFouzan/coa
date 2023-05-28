@@ -1,0 +1,26 @@
+      AREA RESET,CODE
+      ENTRY
+      LDR R0,=VALUE 
+      BL FACT 
+      LDR R1,=0X40000000 
+      STR R5,[R1] 
+STOP B STOP
+FACT 
+      LDR R2,[R0] 
+      CMP R2,#00 
+      BEQ END1 
+      MOV R3,R2 
+LOOP
+      SUB R2,R2,#01 
+      CMP R2,#00 
+      MULNE R3,R2,R3 
+      BNE LOOP 
+      MOV R5,R3 
+      B END2 
+END1
+      MOV R5,#0X01
+END2
+      BX R14 
+      AREA IO,DATA
+VALUE SPACE 4
+      END
