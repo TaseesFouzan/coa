@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+</head>
+<body>
+<div class="c5">
+    <h5>5</h5>
+    <p> AREA RESET,CODE <br>
+        ENTRY <br>
+        LDR R0,=VALUE <br>
+        BL FACT <br>
+        LDR R1,=0X40000000 <br>
+        STR R5,[R1]  <br>
+  STOP B STOP <br>
+  FACT  <br>
+        LDR R2,[R0] <br> 
+        CMP R2,#00 <br>
+        BEQ END1 <br>
+        MOV R3,R2 <br>
+  LOOP <br>
+        SUB R2,R2,#01 <br>
+        CMP R2,#00 <br>
+        MULNE R3,R2,R3 <br>
+        BNE LOOP <br>
+        MOV R5,R3 <br>
+        B END2 <br>
+  END1 <br>
+        MOV R5,#0X01 <br>
+  END2 <br>
+        BX R14  <br>
+        AREA IO,DATA <br>
+  VALUE SPACE 4 <br>
+        END </p></div> <br><br>
+
+   <div class="2">   
+    <h5>2</h5>  
+<p>
+    AREA RESET, CODE <br>
+    ENTRY <br>
+    MOV R3, #0 <br>
+    MOV R4, #0 <br>
+    LDR R0, =INPUTS <br> 
+    LDR R1, =OUTPUTS  <br>
+CONT <br>
+    LDR R2, [R0] <br>
+    ADD R4, R4, R2 <br>
+    ADD R0, R0, #4 <br>
+    ADD R3, R3, #1 <br>
+    CMP R3, #5 <br>
+    BNE CONT <br>
+    MOV R2, #5 <br>
+    MOV R3, #0 <br>
+REPT SUBS R4, R4, R2 <br>
+    ADDPL R3, R3, #1 <br>
+    BPL REPT <br>
+    ADDMI R4, R4, R2 <br>
+    STR R3, [R1] <br>
+    STR R4, [R1, #4] <br>
+STOP B STOP <br>
+INPUTS DCD 01,02,03,04,06 <br>
+    AREA MEMORY, DATA <br>
+OUTPUTS SPACE 4 <br>
+    END
+</p></div>
+<br> <br>
+
+<h5>3</h5>
+<p>
+    AREA RESET, CODE  <br>
+ ENTRY  <br> 
+ LDR R0,=ARR <br>
+ MOV R1, #0 <br>
+ MOV R7, #0 <br>
+ MOV R4, #4 <br>
+ LOP CMP R1, #10 <br> 
+ BEQ EXT <br>
+ LDR R3, [R0] <br> 
+ CMP R3, R4 <br>
+ BEQ MOVE1 <br>
+ B CNT <br>
+MOVE1 ADD R7, R7, #1 <br> 
+ B CNT <br>
+ CNT ADD R0, R0, #4 <br> 
+ ADD R1, R1, #1 <br>
+ B LOP <br>
+EXT <br>
+STOP B STOP <br>
+ARR DCD 4,-5,-1,4,4,0,4,-8,7,4 <br>
+ END 
+</p>
+
+ <br> <br>
+
+ <p>36,38,79,10-5 38,49,36 2-19,5-22 79</p>
+ <br>
+
+ <h5>b4</h5> <br>
+ <p> #includeShiftRegister74HC595.h> <br>
+    #includeKeypad.h> <br>
+    const byte numRows= 4; <br>
+    const byte numCols= 4; <br>
+
+    char keymap[numRows][numCols]={ <br>
+{'0', '4', '8', 'c'}, <br>
+{'1', '5', '9', 'd'}, <br>
+{'2', '6', 'a', 'e'}, <br>
+{'3', '7', 'b', 'f'} <br>
+}; <br>
+char hexvalues[6] = {B01011111, B01111100,B00111001,B01011110, B01111001,B01110001}; <br>
+
+ShiftRegister74HC595 sr(2,12,10,11);  <br>
+uint8_t numberB[] = {B00111111,  <br>
+ B00000110, <br>
+ B01011011, <br>
+ B01001111,  <br>
+ B01100110, <br>
+ B01101101, <br>
+ B01111101, <br>
+ B00000111, <br>
+ B01111111, <br>
+ B01101111 <br>
+ }; <br>
+byte colPins[numRows] = {2,3,4,5}; <br> 
+byte rowPins[numCols]= {6,7,8,9}; <br>
+Keypad myKeypad= Keypad(makeKeymap(keymap), rowPins, colPins, numRows, numCols); <br>
+ void setup() <br>
+ { <br>
+ Serial.begin(9600); <br>
+ } <br>
+ void loop() <br> 
+ { <br>
+ char keypressed = myKeypad.getKey(); <br>
+ Serial.println("keypressed : "+String(keypressed)); <br>
+ if (keypressed != NO_KEY) <br>
+ { <br>
+ Serial.print(keypressed); <br>
+ int i = keypressed - '0'; <br>
+ if(i<10) 
+
+ {
+ uint8_t pinValues[] = {numberB[i],numberB[i]};
+ sr.setAll(pinValues); 
+ delay(100);
+ }
+ else
+ {
+ i = keypressed - 'a';
+ uint8_t pinValues[] = {hexvalues[i],hexvalues[i]};
+ sr.setAll(pinValues); 
+ delay(100);
+ }
+ }
+}
+
+    </p>
+
+<br>
+<h5>b7</h5> <br>
+ 
+<p>
+    #includeAccelStepper.h>
+        #define MotorInterfaceType 4 
+        
+        #define motorPin1 13 
+        #define motorPin2 12 
+        #define motorPin3 11 
+        #define motorPin4 10 
+        
+        int gas_pin = A0; 
+        
+        AccelStepper stepper( MotorInterfaceType, motorPin1, motorPin3, motorPin2, motorPin4);
+        void setup() {
+         pinMode(gas_pin, INPUT); 
+         stepper.setMaxSpeed(1000.0); 
+         Serial.begin(9600);
+        }
+        void loop() {
+         int gas_value = analogRead(gas_pin); 
+         int motorSpeed = map(gas_value, 0, 1023, 0, 1000); 
+         if (gas_value >= 500){ 
+         stepper.run(); 
+         if (motorSpeed > 0)
+         stepper.setSpeed(motorSpeed); 
+         }
+         else
+         stepper.stop();
+         Serial.print("Gas Value : "); 
+         Serial.println(gas_value);
+        }
+</p>
+
+
+</body>
+</html>
