@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p> AREA RESET,CODE <br>
+        ENTRY <br>
+        LDR R0,=VALUE <br>
+        BL FACT <br>
+        LDR R1,=0X40000000 <br>
+        STR R5,[R1]  <br>
+  STOP B STOP <br>
+  FACT  <br>
+        LDR R2,[R0] <br> 
+        CMP R2,#00 <br>
+        BEQ END1 <br>
+        MOV R3,R2 <br>
+  LOOP <br>
+        SUB R2,R2,#01 <br>
+        CMP R2,#00 <br>
+        MULNE R3,R2,R3 <br>
+        BNE LOOP <br>
+        MOV R5,R3 <br>
+        B END2 <br>
+  END1 <br>
+        MOV R5,#0X01 <br>
+  END2 <br>
+        BX R14  <br>
+        AREA IO,DATA <br>
+  VALUE SPACE 4 <br>
+        END </p>
+</body>
+</html>
